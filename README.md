@@ -53,34 +53,6 @@ const zipBlob = await qr.toBatch(
 );
 ```
 
-```javascript
-import {QRPreview} from 'pgqr/react';
-
-function App() {
-  return (
-      <QRPreview
-        code="https://example.com"
-        options={{
-          errorCorrectionLevel: 'H',
-          maskPattern: undefined,
-          logoScale: 0.9,
-          logoAreaScale: 1,
-          dotRadius: 0.5,
-          dotScale: 0.95,
-          dotColor: 'black',
-          outerEyeRadius: 0.5,
-          outerEyeColor: 'black',
-          innerEyeRadius: 0.5,
-          innerEyeColor: 'black',
-          backgroundColor: 'red'
-        }}
-        logo="/logo.svg"
-        style={{width: '50%', height: '50%'}}
-      />
-  );
-}
-```
-
 ### Road Map
 - More dot styles
   - Triangle, Diamond, Circle, Hexagon etc
