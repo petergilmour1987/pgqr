@@ -1,10 +1,14 @@
 {
   "name": "pgqr",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "keywords": ["qrcode", "qr", "svg", "logo", "vector"],
   "author": "petergilmour1987@gmail.com",
   "license": "MIT",
   "description": "Simple QR Code generator with svg logo support",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/petergilmour1987/pgqr.git"
+  },
   "main": "dist/index.js",
   "exports": {
     ".": "./dist/index.js",
