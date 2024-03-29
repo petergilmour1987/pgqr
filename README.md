@@ -25,6 +25,7 @@ const options = {
     outerEyeColor: 'black',
     innerEyeRadius: 0.5,
     innerEyeColor: 'black',
+    backgroundColor: 'red'
 }
 
 const qr = new PGQRCode();
@@ -71,6 +72,7 @@ function App() {
           outerEyeColor: 'black',
           innerEyeRadius: 0.5,
           innerEyeColor: 'black',
+          backgroundColor: 'red'
         }}
         logo="/logo.svg"
         style={{width: '50%', height: '50%'}}

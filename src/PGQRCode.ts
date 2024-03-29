@@ -16,6 +16,7 @@ export type QROptions = {
   outerEyeColor?: string;
   innerEyeRadius?: number;
   innerEyeColor?: string;
+  backgroundColor?: string;
 };
 
 export class PGQRCode {
@@ -144,6 +145,10 @@ export class PGQRCode {
 
     const svg = SVG();
     svg.viewbox(0, 0, outputSize, outputSize);
+
+    if (opts?.backgroundColor) {
+      svg.rect(outputSize, outputSize).fill(opts.backgroundColor);
+    }
 
     // Draw the Dots
     for (let i = 0; i < data.bits.length; i++) {
