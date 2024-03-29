@@ -2,7 +2,7 @@
 
 A QR Code generator with full logo + svg support
 
-<img src='preview.png' style='width: 250px'>
+<img src='qr.png' style='width: 250px'>
 
 ### Usage
 
