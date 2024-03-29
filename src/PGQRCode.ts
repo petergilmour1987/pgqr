@@ -63,17 +63,6 @@ const svgsToZipBlob = async (values: {svg: string; filename: string}[], size: nu
   if (!formats.length) {
     throw new Error('At least one format must be specified');
   }
-  if (
-    values.some((v) => {
-      for (const ext in ['.png', '.jpg', '.pdf', '.svg']) {
-        if (v.filename.endsWith(ext)) {
-          return true;
-        }
-      }
-    })
-  ) {
-    throw new Error('Filenames must not include extensions');
-  }
 
   const zip = new JSZip();
   for (const v of values) {
