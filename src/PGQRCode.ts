@@ -156,12 +156,29 @@ export class PGQRCode {
       const x = i % data.width;
       const y = Math.floor(i / data.width);
       const size = bitSize;
-      svg
-        .rect(size, size)
-        .radius(size * 0.5 * (opts?.dotRadius || 0))
-        .move(x * size, y * size)
-        .scale(opts?.dotScale || 1)
-        .fill(opts?.dotColor || 'black');
+
+      if (!opts?.dotRadius || opts.dotRadius <= 0) {
+        svg
+          .rect(size + 1, size + 1) // +1 to fix artifacts
+          .move(x * size, y * size)
+          .scale(opts?.dotScale || 1)
+          .fill('black');
+      } else {
+        if (opts.dotRadius >= 1) {
+          svg
+            .circle(size)
+            .move(x * size, y * size)
+            .scale(opts?.dotScale || 1)
+            .fill(opts?.dotColor || 'black');
+        } else {
+          svg
+            .rect(size + 1, size + 1) // +1 to fix artifacts
+            .radius(size * 0.5 * (opts?.dotRadius || 0))
+            .move(x * size, y * size)
+            .scale(opts?.dotScale || 1)
+            .fill(opts?.dotColor || 'black');
+        }
+      }
     }
 
     // Draw the outer eyes

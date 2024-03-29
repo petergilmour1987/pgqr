@@ -18,10 +18,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "ts-node": {
-    "swc": true,
-    "transpileOnly": true
-  },
   "include": ["src"],
   "exclude": ["node_modules"]
 }
