@@ -2,3 +2,7 @@ src
 biome.json
 .gitignore
 qr.png
+.husky
+.vscode
+tsconfig.json
+README.md

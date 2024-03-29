@@ -27,7 +27,8 @@ const options = {
     innerEyeColor: 'black',
 }
 
-const svg = await PGQr.current.renderSVG('https://example.com', options, '/logo.svg');
+const qr = new PGQRCode();
+const svg = await qr.renderSVG('https://example.com', options, '/logo.svg');
 ```
 
 ```
@@ -56,3 +57,10 @@ function App() {
   );
 }
 ```
+
+### Road Map
+- Import SVG for dots
+- JPEG / PNG Output
+- PDF Output
+- Download utilities
+- Linear and Radial Gradient Support

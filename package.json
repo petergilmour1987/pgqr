@@ -1,6 +1,6 @@
 {
   "name": "pgqr",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "keywords": ["qrcode", "qr", "svg", "logo", "vector"],
   "author": "petergilmour1987@gmail.com",
   "license": "MIT",
@@ -15,7 +15,11 @@
     "./react": "./dist/react/index.js"
   },
   "scripts": {
-    "build": "tsc"
+    "prepare": "husky",
+    "build": "tsc",
+    "lint": "biome lint .",
+    "format:check": "biome format .",
+    "format": "biome format --write ."
   },
   "dependencies": {
     "@svgdotjs/svg.js": "^3.2.0",
@@ -24,6 +28,7 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "husky": "^9.0.11",
     "@biomejs/biome": "^1.6.3",
     "@types/qrcode": "^1.5.5",
     "@types/react": "^18.2.66",
