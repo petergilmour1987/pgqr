@@ -4,7 +4,7 @@
     "enabled": true
   },
   "files": {
-    "ignore": []
+    "ignore": ["package.json"]
   },
   "javascript": {
     "formatter": {

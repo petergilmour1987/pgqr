@@ -59,8 +59,10 @@ function App() {
 ```
 
 ### Road Map
-- Import SVG for dots
-- JPEG / PNG Output
-- PDF Output
+- JPEG + PNG + PDF Output
 - Download utilities
-- Linear and Radial Gradient Support
+  - Batch generate and download with ZIP file
+- More dot styles
+  - Triangle, Diamond, Circle, Hexagon etc
+  - Import custom SVG
+- Linear and Radial Gradients
