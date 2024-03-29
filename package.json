@@ -1,6 +1,6 @@
 {
   "name": "pgqr",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "keywords": [
     "qrcode",
     "qr",
@@ -22,6 +22,7 @@
   },
   "scripts": {
     "prepare": "husky",
+    "clean": "git clean -fdX",
     "build": "tsc",
     "lint": "biome lint .",
     "format:check": "biome format .",
@@ -29,16 +30,19 @@
   },
   "dependencies": {
     "@svgdotjs/svg.js": "^3.2.0",
+    "jspdf": "^2.5.1",
+    "jszip": "^3.10.1",
     "qrcode": "^1.5.3",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "svg2pdf.js": "^2.2.3"
   },
   "devDependencies": {
-    "husky": "^9.0.11",
     "@biomejs/biome": "^1.6.3",
     "@types/qrcode": "^1.5.5",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
+    "husky": "^9.0.11",
     "typescript": "^5.4.3"
   }
 }

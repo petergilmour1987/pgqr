@@ -1,5 +1,8 @@
-import QRCode from 'qrcode';
 import {SVG} from '@svgdotjs/svg.js';
+import {jsPDF} from 'jspdf';
+import JSZip from 'jszip';
+import QRCode from 'qrcode';
+import 'svg2pdf.js';
 
 export type QRData = {bits: (0 | 1)[]; width: number; logoArea?: {w: number; h: number}};
 
@@ -15,6 +18,85 @@ export type QROptions = {
   outerEyeColor?: string;
   innerEyeRadius?: number;
   innerEyeColor?: string;
+};
+
+const svgToBlob = async (svg: string) => {
+  const blob = new Blob([svg], {type: 'image/svg+xml'});
+  return blob;
+};
+
+const svgToImageBlob = async (svg: string, size: number, format: 'jpg' | 'png', quality = 0.6) => {
+  const image = new Image();
+  image.src = `data:image/svg+xml;base64,${btoa(svg)}`;
+  await new Promise((resolve) => {
+    image.onload = resolve;
+  });
+  const canvas = document.createElement('canvas');
+  canvas.width = size;
+  canvas.height = size;
+  const context = canvas.getContext('2d')!;
+  context.drawImage(image, 0, 0, size, size);
+  return new Promise<Blob>((resolve) => {
+    canvas.toBlob(
+      (blob) => {
+        resolve(blob!);
+      },
+      format,
+      quality,
+    );
+  });
+};
+
+const svgToPDFBlob = async (svg: string, size: number) => {
+  const doc = new jsPDF({
+    unit: 'px',
+    format: [size, size],
+  });
+  const svgEl = document.createElement('svg');
+  svgEl.innerHTML = svg;
+  await doc.svg(svgEl, {x: 0, y: 0, width: size, height: size});
+  const pdfBlob = doc.output('blob');
+  return pdfBlob;
+};
+
+const svgsToZipBlob = async (values: {svg: string; filename: string}[], size: number, formats: ('png' | 'jpg' | 'pdf' | 'svg')[]) => {
+  if (!formats.length) {
+    throw new Error('At least one format must be specified');
+  }
+  if (
+    values.some((v) => {
+      for (const ext in ['.png', '.jpg', '.pdf', '.svg']) {
+        if (v.filename.endsWith(ext)) {
+          return true;
+        }
+      }
+    })
+  ) {
+    throw new Error('Filenames must not include extensions');
+  }
+
+  const zip = new JSZip();
+  for (const v of values) {
+    if (formats.includes('png')) {
+      const png = await svgToImageBlob(v.svg, size, 'png');
+      zip.file(`${v.filename}.png`, png);
+    }
+    if (formats.includes('jpg')) {
+      const jpg = await svgToImageBlob(v.svg, size, 'jpg');
+      zip.file(`${v.filename}.jpg`, jpg);
+    }
+    if (formats.includes('pdf')) {
+      const pdf = await svgToPDFBlob(v.svg, size);
+      zip.file(`${v.filename}.pdf`, pdf);
+    }
+    if (formats.includes('svg')) {
+      const svg = await svgToBlob(v.svg);
+      zip.file(`${v.filename}.svg`, svg);
+    }
+  }
+
+  const blob = await zip.generateAsync({type: 'blob'});
+  return blob;
 };
 
 const getRoundedRectPath = (x: number, y: number, width: number, height: number, radius: number) => {
@@ -230,4 +312,35 @@ export class PGQRCode {
 
     return svg.svg();
   }
+
+  public toSvg = async (code: string, opts?: QROptions, logo?: string): Promise<Blob> => {
+    const svg = await this.renderSVG(code, opts, logo);
+    return svgToBlob(svg);
+  };
+
+  public toImage = async (code: string, opts?: QROptions, logo?: string, size = 1024, format: 'jpg' | 'png' = 'png', quality = 0.6): Promise<Blob> => {
+    const svg = await this.renderSVG(code, opts, logo);
+    return svgToImageBlob(svg, size, format, quality);
+  };
+
+  public toPDF = async (code: string, opts?: QROptions, logo?: string, size = 1024): Promise<Blob> => {
+    const svg = await this.renderSVG(code, opts, logo);
+    return svgToPDFBlob(svg, size);
+  };
+
+  public toBatch = async (
+    values: {code: string; filename: string}[],
+    opts?: QROptions,
+    logo?: string,
+    size = 1024,
+    formats: ('png' | 'jpg' | 'pdf' | 'svg')[] = ['svg'],
+  ): Promise<Blob> => {
+    const svgs = await Promise.all(
+      values.map(async (v) => {
+        const svg = await this.renderSVG(v.code, opts, logo);
+        return {svg, filename: v.filename};
+      }),
+    );
+    return svgsToZipBlob(svgs, size, formats);
+  };
 }

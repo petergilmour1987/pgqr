@@ -28,7 +28,28 @@ const options = {
 }
 
 const qr = new PGQRCode();
-const svg = await qr.renderSVG('https://example.com', options, '/logo.svg');
+
+const svgString = await qr.renderSVG('https://example.com', options, '/logo.svg');
+
+const pngBlob = await qr.toImage('https://example.com', options, '/logo.svg', 1024, 'png');
+
+const jpgBlob = await qr.toImage('https://example.com', options, '/logo.svg', 1024, 'jpg');
+
+const svgBlob = await qr.toSvg('https://example.com', options, '/logo.svg');
+
+const pdfBlob = await qr.toPDF('https://example.com', options, '/logo.svg');
+
+const zipBlob = await qr.toBatch(
+  [
+    {code: 'https://example.com', filename: 'qr1'},
+    {code: 'https://example.com', filename: 'qr2'},
+    {code: 'https://example.com', filename: 'qr3'},
+  ],
+  options,
+  '/logo.svg',
+  1024,
+  formats: ['png', 'jpg', 'svg', 'pdf']
+);
 ```
 
 ```javascript
@@ -59,9 +80,6 @@ function App() {
 ```
 
 ### Road Map
-- JPEG + PNG + PDF Output
-- Download utilities
-  - Batch generate and download with ZIP file
 - More dot styles
   - Triangle, Diamond, Circle, Hexagon etc
   - Import custom SVG
