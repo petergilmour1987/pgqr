@@ -83,4 +83,3 @@ function App() {
 - More dot styles
   - Triangle, Diamond, Circle, Hexagon etc
   - Import custom SVG
-- Linear and Radial Gradients
