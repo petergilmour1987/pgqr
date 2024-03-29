@@ -10,7 +10,7 @@ A QR Code generator with full logo + svg support
 npm install pgqr
 ```
 
-```
+```javascript
 import {PGQRCode} from 'pgqr';
 
 const options = {
@@ -31,7 +31,7 @@ const qr = new PGQRCode();
 const svg = await qr.renderSVG('https://example.com', options, '/logo.svg');
 ```
 
-```
+```javascript
 import {QRPreview} from 'pgqr/react';
 
 function App() {
