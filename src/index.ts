@@ -243,7 +243,7 @@ export class PGQRCode {
           .rect(size + 1, size + 1) // +1 to fix artifacts
           .move(x * size, y * size)
           .scale(opts?.dotScale || 1)
-          .fill('black');
+          .fill(opts?.dotColor || 'black');
       } else {
         if (opts.dotRadius >= 1) {
           svg
