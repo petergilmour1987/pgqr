@@ -25,7 +25,7 @@ export const svgToImageBlob = async (svg: string, size: number, format: 'jpg' | 
       (blob) => {
         resolve(blob!);
       },
-      format,
+      format === 'png' ? 'image/png' : 'image/jpeg',
       quality,
     );
   });
