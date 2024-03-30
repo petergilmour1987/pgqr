@@ -172,10 +172,6 @@ export class PGQRCode {
     const outputSize = 1024;
 
     if (logo) {
-      if (!logo.endsWith('.svg')) {
-        throw new Error('Logo must be an SVG file');
-      }
-
       if (logo !== this.logoData?.key) {
         await this.setLogo(logo);
       }
