@@ -146,9 +146,9 @@ export class PGQRCode {
 
     if (this.logoData) {
       // Define the maximum area the logo can take up
-      let maxArea = Math.round(out.width * 0.16);
-      if (out.width > 21) maxArea = Math.round(out.width * 0.18);
-      if (out.width > 50) maxArea = Math.round(out.width * 0.2);
+      let maxArea = Math.round(out.width * 0.15);
+      if (out.width > 21) maxArea = Math.round(out.width * 0.16);
+      if (out.width > 50) maxArea = Math.round(out.width * 0.18);
       maxArea = Math.round(maxArea * (opts?.logoAreaScale || 1));
 
       out.logoArea = {
