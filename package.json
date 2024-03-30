@@ -1,6 +1,6 @@
 {
   "name": "pgqr",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "keywords": [
     "qrcode",
     "qr",
@@ -22,6 +22,9 @@
       "import": "./dist/PGQRCode.js",
       "require": "./dist/PGQRCode.js"
     }
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "type": "module",
   "author": "petergilmour1987@gmail.com",
