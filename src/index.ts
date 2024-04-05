@@ -9,17 +9,40 @@ export const svgToBlob = async (svg: string) => {
   return blob;
 };
 
-export const svgToImageBlob = async (svg: string, size: number, format: 'jpg' | 'png', quality = 0.6) => {
+const renderLarge = async (svg: string, size: number, scale: number) => {
   const image = new Image();
   image.src = `data:image/svg+xml;base64,${btoa(svg)}`;
   await new Promise((resolve) => {
     image.onload = resolve;
   });
   const canvas = document.createElement('canvas');
+  canvas.width = size * scale;
+  canvas.height = size * scale;
+  const context = canvas.getContext('2d')!;
+  context.drawImage(image, 0, 0, size * scale, size * scale);
+  return new Promise<Blob>((resolve) => {
+    canvas.toBlob(
+      (blob) => {
+        resolve(blob!);
+      },
+      'image/png',
+      1,
+    );
+  });
+};
+
+export const svgToImageBlob = async (svg: string, size: number, format: 'jpg' | 'png', quality = 1) => {
+  const largeBlob = await renderLarge(svg, size, 4);
+  const largeImage = new Image();
+  largeImage.src = URL.createObjectURL(largeBlob);
+  await new Promise((resolve) => {
+    largeImage.onload = resolve;
+  });
+  const canvas = document.createElement('canvas');
   canvas.width = size;
   canvas.height = size;
   const context = canvas.getContext('2d')!;
-  context.drawImage(image, 0, 0, size, size);
+  context.drawImage(largeImage, 0, 0, size, size);
   return new Promise<Blob>((resolve) => {
     canvas.toBlob(
       (blob) => {
@@ -169,8 +192,6 @@ export class PGQRCode {
   }
 
   public async renderSVG(code: string, opts?: QROptions, logo?: string): Promise<string> {
-    const outputSize = 1024;
-
     if (logo) {
       if (logo !== this.logoData?.key) {
         await this.setLogo(logo);
@@ -220,9 +241,10 @@ export class PGQRCode {
       data.bits[index] = 0;
     }
 
-    const bitSize = outputSize / data.width;
-    const outerEyeSize = (outputSize / data.width) * 7;
-    const innerEyeSize = (outputSize / data.width) * 3;
+    const bitSize = 32;
+    const outputSize = data.width * bitSize;
+    const outerEyeSize = bitSize * 7;
+    const innerEyeSize = bitSize * 3;
 
     const svg = SVG();
     svg.viewbox(0, 0, outputSize, outputSize);
@@ -235,27 +257,28 @@ export class PGQRCode {
     for (let i = 0; i < data.bits.length; i++) {
       if (!data.bits[i]) continue;
       const x = i % data.width;
+      console.log(x);
+
       const y = Math.floor(i / data.width);
-      const size = bitSize;
 
       if (!opts?.dotRadius || opts.dotRadius <= 0) {
         svg
-          .rect(size + 1, size + 1) // +1 to fix artifacts
-          .move(x * size, y * size)
+          .rect(bitSize, bitSize)
+          .move(x * bitSize, y * bitSize)
           .scale(opts?.dotScale || 1)
           .fill(opts?.dotColor || 'black');
       } else {
         if (opts.dotRadius >= 1) {
           svg
-            .circle(size)
-            .move(x * size, y * size)
+            .circle(bitSize)
+            .move(x * bitSize, y * bitSize)
             .scale(opts?.dotScale || 1)
             .fill(opts?.dotColor || 'black');
         } else {
           svg
-            .rect(size + 1, size + 1) // +1 to fix artifacts
-            .radius(size * 0.5 * (opts?.dotRadius || 0))
-            .move(x * size, y * size)
+            .rect(bitSize, bitSize)
+            .radius(bitSize * 0.5 * (opts?.dotRadius || 0))
+            .move(x * bitSize, y * bitSize)
             .scale(opts?.dotScale || 1)
             .fill(opts?.dotColor || 'black');
         }
@@ -325,7 +348,7 @@ export class PGQRCode {
     return svgToBlob(svg);
   };
 
-  public toImage = async (code: string, opts?: QROptions, logo?: string, size = 1024, format: 'jpg' | 'png' = 'png', quality = 0.6): Promise<Blob> => {
+  public toImage = async (code: string, opts?: QROptions, logo?: string, size = 1024, format: 'jpg' | 'png' = 'png', quality = 1): Promise<Blob> => {
     const svg = await this.renderSVG(code, opts, logo);
     return svgToImageBlob(svg, size, format, quality);
   };
