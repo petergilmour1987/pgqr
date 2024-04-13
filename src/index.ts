@@ -257,7 +257,6 @@ export class PGQRCode {
     for (let i = 0; i < data.bits.length; i++) {
       if (!data.bits[i]) continue;
       const x = i % data.width;
-      console.log(x);
 
       const y = Math.floor(i / data.width);
 
